@@ -1,0 +1,17 @@
+[{
+    "_id": 1,
+    "transactionId": "t1",
+    "fromProcess": "A",
+    "toProcess": "B",
+    "timeOfTransaction": 0,
+    "timeOfApproval": 0,
+    "status": true,
+    "meaasge" :"some message",
+    "entries": {
+      "additionalProp1": 0,
+      "additionalProp2": 0,
+      "additionalProp3": 0
+    },
+    "fromUserId": "1234",
+    "toUserPhone": "123454"
+}]
