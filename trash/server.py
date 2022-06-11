@@ -1,17 +1,8 @@
-from turtle import st
-import os
 from flask import Flask,request, Response
 import pymongo
 import json
-from flask_restful import Api, Resource
-import constant
-from controllers.transaction.TransactionFilter import  TransactionFilter
-
-
 app = Flask(__name__)
-api=Api(app)        
 
-                    
 ##################### Mongo Connection ##############################
 mongoUri="mongodb+srv://inventory-admin:inventory123@inventory.rbcanbq.mongodb.net/test?authSource=admin&replicaSet=atlas-13oxx1-shard-0&readPreference=primary&ssl=true"
 try:
@@ -27,20 +18,17 @@ except:
 @app.route("/", methods=["get"])
 def welcome():
     try:
-        currentDir = os.path.dirname(__file__)
-        filename = os.path.join(currentDir, constant.welcomeJsonFileRelativePath)
-        print(filename)
-        f = open(filename)
-        welcomeMessage = json.load(f)
-        welcomeMessageJson=json.dumps(welcomeMessage)
-        print(welcomeMessageJson)
+        return "welcome to inventory server"
+    except Exception as e:
+        print("============== ERROR ===============")
+        print(e);
         return Response(
-            response=welcomeMessageJson,
-            status=200,
+            response=json.dumps({
+                "messge":"user not found"}),
+            status=500,
             mimetype="application/json"
         )
-    except Exception as e:
-        return handleResponse(e)
+
 
 ##################### Get User By phone number ###############################
 @app.route("/userByNumber", methods=["get"])
@@ -56,7 +44,14 @@ def getUserByNumber():
             mimetype="application/json"
         )
     except Exception as e:
-        return handleResponse(e)
+        print("============== ERROR ===============")
+        print(e);
+        return Response(
+            response=json.dumps({
+                "messge":"user not found"}),
+            status=500,
+            mimetype="application/json"
+        )
 
 ##################### Create/Post User ###############################
 @app.route("/user", methods=["post"])
@@ -74,23 +69,8 @@ def create_user():
             mimetype="application/json"
         )
     except Exception as e:
-        return handleResponse(e)
-    
-#####################   Add resources ##############################
-api.add_resource(TransactionFilter,"/transactionFilter")
-
-#####################   error handleResponse ##############################
-def handleResponse(error):
-    print("============== ERROR handleResponse ===============")
-    print(error)
-    errorStr=str(error)
-    return Response(
-        response=json.dumps({
-                "messge":"Bad Request",
-                "Error":errorStr
-                }),
-        status=500,
-        mimetype="application/json"
-    )
+        print("============== ERROR ===============")
+        print(e);
+###################################################
 if __name__ == '__main__':
     app.run(debug=True,port=8080,host="0.0.0.0")

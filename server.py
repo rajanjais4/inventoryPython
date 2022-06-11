@@ -14,6 +14,22 @@ try:
 except:
     print("Couldn't connect to Mongo'");
 
+##################### welcome ###############################
+@app.route("/", methods=["get"])
+def welcome():
+    try:
+        return "welcome to inventory server"
+    except Exception as e:
+        print("============== ERROR ===============")
+        print(e);
+        return Response(
+            response=json.dumps({
+                "messge":"Bad Request"}),
+            status=500,
+            mimetype="application/json"
+        )
+
+
 ##################### Get User By phone number ###############################
 @app.route("/userByNumber", methods=["get"])
 def getUserByNumber():
@@ -57,4 +73,4 @@ def create_user():
         print(e);
 ###################################################
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=8080,host="0.0.0.0")
