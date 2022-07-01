@@ -1,38 +1,42 @@
-from turtle import st
+from controllers.user.userById import UserById
+from controllers.user.userAccounting import UserAccounting
+from controllers.transaction.TransactionFilter import TransactionFilter
+from controllers.process.processAccounting import ProcessAccounting
 import os
-from flask import Flask,request, Response
-import pymongo
+from flask import Flask, request, Response
 import json
 from flask_restful import Api, Resource
-import constant
-from controllers.transaction.TransactionFilter import  TransactionFilter
+import constants
+from mongoConnection import MongoConnection
 
 
 app = Flask(__name__)
-api=Api(app)        
+api = Api(app)
 
-                    
-##################### Mongo Connection ##############################
-mongoUri="mongodb+srv://inventory-admin:inventory123@inventory.rbcanbq.mongodb.net/test?authSource=admin&replicaSet=atlas-13oxx1-shard-0&readPreference=primary&ssl=true"
-try:
-    mongo =pymongo.MongoClient(mongoUri,
-    serverSelectionTimeoutMs = 1000)
-    mongo.server_info()
-    inventoryDb=mongo.inventory
-    print("mongo connection successfully")
-except:
-    print("Couldn't connect to Mongo'");
+MongoConnection.mongoConnect()
+mongo = MongoConnection.mongoClient
+inventoryDb = mongo.inventory
+
+
+#####################   Add resources ##############################
+api.add_resource(TransactionFilter, "/transactionFilter")
+api.add_resource(UserById, "/userById")
+api.add_resource(UserAccounting, "/userAccounting")
+api.add_resource(ProcessAccounting, "/processAccounting")
 
 ##################### welcome ###############################
+
+
 @app.route("/", methods=["get"])
 def welcome():
     try:
         currentDir = os.path.dirname(__file__)
-        filename = os.path.join(currentDir, constant.welcomeJsonFileRelativePath)
+        filename = os.path.join(
+            currentDir, constants.welcomeJsonFileRelativePath)
         print(filename)
         f = open(filename)
         welcomeMessage = json.load(f)
-        welcomeMessageJson=json.dumps(welcomeMessage)
+        welcomeMessageJson = json.dumps(welcomeMessage)
         print(welcomeMessageJson)
         return Response(
             response=welcomeMessageJson,
@@ -43,12 +47,14 @@ def welcome():
         return handleResponse(e)
 
 ##################### Get User By phone number ###############################
+
+
 @app.route("/userByNumber", methods=["get"])
 def getUserByNumber():
     try:
-        userData=list(inventoryDb.user.find())
+        userData = list(inventoryDb.user.find())
         for user in userData:
-            user["_id"]=str(user["_id"]);
+            user["_id"] = str(user["_id"])
         print(userData)
         return Response(
             response=json.dumps(userData),
@@ -58,39 +64,42 @@ def getUserByNumber():
     except Exception as e:
         return handleResponse(e)
 
+
 ##################### Create/Post User ###############################
 @app.route("/user", methods=["post"])
 def create_user():
     try:
-        requestJson=request.get_json()
-        user=requestJson
-        dbResponse=inventoryDb.user.insert_one(user)
+        requestJson = request.get_json()
+        user = requestJson
+        dbResponse = inventoryDb.user.insert_one(user)
         print("post id - "+str(dbResponse.inserted_id))
         return Response(
             response=json.dumps({
-                "messge":"user created",
-                "_id":f"{dbResponse.inserted_id}"}),
+                "messge": "user created",
+                "_id": f"{dbResponse.inserted_id}"}),
             status=200,
             mimetype="application/json"
         )
     except Exception as e:
         return handleResponse(e)
-    
-#####################   Add resources ##############################
-api.add_resource(TransactionFilter,"/transactionFilter")
+
 
 #####################   error handleResponse ##############################
+
+
 def handleResponse(error):
     print("============== ERROR handleResponse ===============")
     print(error)
-    errorStr=str(error)
+    errorStr = str(error)
     return Response(
         response=json.dumps({
-                "messge":"Bad Request",
-                "Error":errorStr
-                }),
+            "messge": "Bad Request",
+            "Error": errorStr
+        }),
         status=500,
         mimetype="application/json"
     )
+
+
 if __name__ == '__main__':
-    app.run(debug=True,port=8080,host="0.0.0.0")
+    app.run(debug=True, port=8080, host="0.0.0.0")
