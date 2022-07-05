@@ -37,3 +37,6 @@ processAccountingSchemaHeader = ["User Id","User Name","ProcessId","Total Wage"]
 processAccountingEntitySend="entitySend"
 processAccountingEntityReceived="entityReceived"
 processAccountingUserIdWiseDetails="userIdWiseDetails"
+processAccountingTotalWage="totalWage"
+processAccountingFromUser="fromUserId"
+processAccountingToUser="toUserId"

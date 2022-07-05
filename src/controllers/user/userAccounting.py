@@ -46,7 +46,16 @@ class UserAccounting(Resource):
         args = userReqParser.parse_args()
         return args
     def validateTransactionDict(self,transactionDict,userId):
-        if (transactionDict[constants.tnxCollectionFromUserId] == userId and
+        if transactionDict[constants.txnCollectionStatus] == constants.DataBaseStatusApproved:
+            return True
+        return False;
+    def validateFromUserIdTransactionDict(self,transactionDict,userId):
+        if (transactionDict[constants.processAccountingFromUser] == userId and
+            transactionDict[constants.txnCollectionStatus] == constants.DataBaseStatusApproved):
+            return True
+        return False;
+    def validateToUserIdTransactionDict(self,transactionDict,userId):
+        if (transactionDict[constants.processAccountingToUser] == userId and
             transactionDict[constants.txnCollectionStatus] == constants.DataBaseStatusApproved):
             return True
         return False;
@@ -58,22 +67,105 @@ class UserAccounting(Resource):
         for transactionDict in transactionDictList:
             if self.validateTransactionDict(transactionDict,userId) == True:
                 process=transactionDict[constants.tnxCollectionFromProcess]
-                processTxnWage=transactionDict[constants.tnxCollectionFromUserWage]
+                processTxnWage=0
+                entitySend={}
+                entityReceived={}
+
+                if self.validateFromUserIdTransactionDict(transactionDict,userId) == True:
+                    processTxnWage=transactionDict[constants.tnxCollectionFromUserWage]
+                    entitySend=transactionDict[constants.txnCollectionEntries]
+                if self.validateToUserIdTransactionDict(transactionDict,userId) == True:
+                    entityReceived=transactionDict[constants.txnCollectionEntries]
+
                 if process in processWisePayment:
-                    processWisePayment[process]+=processTxnWage
+                    processWisePayment[process][constants.processAccountingTotalWage]+=processTxnWage
+
+                    # update entity send
+                    entitySendTotal=processWisePayment[process][constants.processAccountingEntitySend]
+                    for entity in entitySend:
+                        if entity in entitySendTotal:
+                            entitySendTotal[entity]+=entitySend[entity]
+                        else:
+                            entitySendTotal[entity]=entitySend[entity]
+                    
+                    # update entity Received
+                    entityReceivedTotal=processWisePayment[process][constants.processAccountingEntityReceived]
+                    for entity in entityReceived:
+                        if entity in entityReceivedTotal:
+                            entityReceivedTotal[entity]+=entityReceived[entity]
+                        else:
+                            entityReceivedTotal[entity]=entityReceived[entity]
                 else:
-                    processWisePayment[process]=processTxnWage
+                    processWisePayment[process]={
+                        constants.processAccountingTotalWage:processTxnWage,
+                        constants.processAccountingEntitySend:entitySend,
+                        constants.processAccountingEntityReceived:entityReceived
+                        }
         result["processWisePayment"]=processWisePayment
         self._print(result)
         return result
+    # Get list of all received entity in the dict to update the header
+    def getReceivedEntityList(self,dict):
+        result=set()
+        processWisePayment=dict["processWisePayment"]
+        for processId in processWisePayment:
+            result.update(processWisePayment[processId][constants.processAccountingEntityReceived].keys())
+        return list(result)
+    # Get list of all send entity in the dict to update the header
+    def getSendEntityList(self,dict):
+        result=set()
+        processWisePayment=dict["processWisePayment"]
+        for processId in processWisePayment:
+            result.update(processWisePayment[processId][constants.processAccountingEntitySend].keys())
+        return list(result)
+    
+    def updateHeader(self,entityList,suffix):
+        result=[]
+        for entity in entityList:
+            result.append(entity+" "+suffix)
+        return result
+    
+
+    def updateRowDataForEntity(self,entityDict,entityList):
+        result=[]
+        for entity in entityList:
+            if entity in entityDict:
+                result.append(entityDict[entity])
+            else:
+                result.append(0)
+        return result
+    
     def convertProcessedOuputByUserToCsv(self,dict):
-        result=[["User Id","User Name","ProcessId","Total Wage"]]
+        header=constants.processAccountingSchemaHeader.copy()
+        # Get list of all received entity in the dict to update the header
+        receivedEntityList=self.getReceivedEntityList(dict)
+        sendEntityList=self.getSendEntityList(dict)
+        # updating header for send entity with send suffix
+        header.extend(self.updateHeader(sendEntityList,"send"))
+        # updating header for received entity with received suffix
+        header.extend(self.updateHeader(receivedEntityList,"received"))
+        self._print(header)
+
+        result=[header]
         userId=dict["userId"]
         userName=dict["userName"]
         processWisePayment=dict["processWisePayment"]
         for processId in processWisePayment:
-            totalWage=processWisePayment[processId]
-            result.append([userId,userName,processId,totalWage])
+            totalWage=processWisePayment[processId][constants.processAccountingTotalWage]
+            row=[userId,userName,processId,totalWage]
+
+            row.extend(
+                (self.updateRowDataForEntity(processWisePayment[processId]
+                [constants.processAccountingEntitySend],
+                sendEntityList)
+            ))
+
+            row.extend(
+                (self.updateRowDataForEntity(processWisePayment[processId]
+                [constants.processAccountingEntityReceived],
+                receivedEntityList)
+            ))
+            result.append(row)
         self._print(result)
         my_df = pd.DataFrame(result)
         return my_df
