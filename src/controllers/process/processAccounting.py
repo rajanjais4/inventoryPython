@@ -11,6 +11,7 @@ import sys
 import pandas as pd
 from io import BytesIO
 from flask import send_file
+import os 
 
 sys.path.insert(0, '../..')
 
@@ -135,6 +136,11 @@ class ProcessAccounting(Resource):
             else:
                 result.append(0)
         return result
+    
+    def saveCsvFile(self,csvResult,path):
+        print("start saving data to csv file in static")
+        current_dir_path = os.path.dirname(os.path.realpath(__file__))
+        csvResult.to_csv(path,index=False,header=False)
 
     def convertProcessedOuputByUserToCsv(self,dict):
         header=constants.processAccountingSchemaHeader.copy()
@@ -182,7 +188,8 @@ class ProcessAccounting(Resource):
                     processedOuputByUser = self.getProcessedOuputByUser(
                         transactionDictList, args[constants.processIdParameter])
                     csvResult=self.convertProcessedOuputByUserToCsv(processedOuputByUser)
-                    response_stream = BytesIO(csvResult.to_csv(index=False,header=True).encode())
+                    response_stream = BytesIO(csvResult.to_csv(index=False,header=False).encode())
+                    self.saveCsvFile(csvResult,constants.processAccountingStaticCsvPath)
                     return send_file(
                         response_stream,
                         mimetype="text/csv",

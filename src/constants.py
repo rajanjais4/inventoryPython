@@ -3,7 +3,7 @@ welcomeJsonFileRelativePath = "./utils/welcome.json"
 
 #########################  Mongo Config Details  ###############################
 mongoUri = "mongodb+srv://inventory-admin:inventory123@inventory.rbcanbq.mongodb.net/test?authSource=admin&replicaSet=atlas-13oxx1-shard-0&readPreference=primary&ssl=true"
-mongoInventoryDb = "inventory"
+mongoInventoryDb = "raado"
 mongoUserCollection = "raado-users"
 mongoTransactionCollection = "raado-transactions"
 ######################### common Collection SDK ################################
@@ -15,7 +15,7 @@ tnxCollectionToProcess = "toProcess"
 tnxCollectionFromUserId = "fromUserId"
 tnxCollectionToUserId = "toUserId"
 tnxCollectionFromProcess = "fromProcess"
-tnxCollectionFromUserWage="fromUserWage"
+tnxCollectionFromUserWage="amount"
 tnxCollectionFromUserName = "fromUserName"
 txnCollectionStatus="status"
 txnCollectionEntries="entries"
@@ -40,3 +40,7 @@ processAccountingUserIdWiseDetails="userIdWiseDetails"
 processAccountingTotalWage="totalWage"
 processAccountingFromUser="fromUserId"
 processAccountingToUser="toUserId"
+processAccountingStaticCsvPath="./src/static/processAccounting.csv"
+
+######################### User Accounting Constants #################
+userAccountingStaticCsvPath="./src/static/userAccounting.csv"
