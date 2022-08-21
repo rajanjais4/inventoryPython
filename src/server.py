@@ -2,6 +2,7 @@ from controllers.user.userById import UserById
 from controllers.user.userAccounting import UserAccounting
 from controllers.transaction.TransactionFilter import TransactionFilter
 from controllers.process.processAccounting import ProcessAccounting
+from controllers.staticReport.staticStock import StockReport
 import os
 from flask import Flask, request, Response
 import json
@@ -23,6 +24,7 @@ api.add_resource(TransactionFilter, "/transactionFilter")
 api.add_resource(UserById, "/userById")
 api.add_resource(UserAccounting, "/userAccounting")
 api.add_resource(ProcessAccounting, "/processAccounting")
+api.add_resource(StockReport, "/StockReport")
 
 ##################### welcome ###############################
 
