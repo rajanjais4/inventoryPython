@@ -175,7 +175,7 @@ class UserAccounting(Resource):
         my_df = pd.DataFrame(result)
         return my_df
 
-    def get(self):
+    def post(self):
         args = self.getArgs()
         try:
             transactionFilter = TransactionFilter()

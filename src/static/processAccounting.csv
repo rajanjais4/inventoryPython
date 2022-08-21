@@ -1,3 +1,3 @@
-User Id,User Name,ProcessId,Total Wage,sawDustWt send,bambooUnits send,filamentWt send,returnedSliverWt send,bambooWt send,bambooWt received,bambooUnits received
-URb69ca9a1-14d1-45e9-a87c-a0b634fa1987,swapnil,WAREHOUSE,0,0,1,0,0,1,0,0
-UR41db08bd-dd7d-48c9-982b-540e9275ed99,Rajan,WAREHOUSE,0,64,0,58,38,0,115,104
+User Id,User Name,ProcessId,Total Wage,bambooUnits send,returnedSliverWt send,bambooWt send,filamentWt send,sawDustWt send,bambooUnits received,bambooWt received
+URb69ca9a1-14d1-45e9-a87c-a0b634fa1987,swapnil,WAREHOUSE,0,1,0,1,0,0,0,0
+UR41db08bd-dd7d-48c9-982b-540e9275ed99,Rajan,WAREHOUSE,0,0,38,0,58,64,104,115

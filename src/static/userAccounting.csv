@@ -1,4 +1,4 @@
-User Id,User Name,ProcessId,Total Wage,bambooWt send,splitWt send,knotWt send,bambooUnits send,sawDustWt received,bambooUnits received,filamentWt received,returnedSliverWt received,splitWt received,bambooWt received,knotWt received
-UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,WAREHOUSE,0,1,0,0,1,64,0,58,38,0,0,0
-UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,UNLOAD_BAMBOO,17160,66,0,0,66,0,104,0,0,0,115,0
-UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,CROSS_CUTTING,550,0,100,10,0,0,0,0,0,1022,0,1098
+User Id,User Name,ProcessId,Total Wage,knotWt send,splitWt send,bambooUnits send,bambooWt send,returnedSliverWt received,filamentWt received,bambooWt received,bambooUnits received,knotWt received,splitWt received,sawDustWt received
+UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,WAREHOUSE,0,0,0,1,1,38,58,0,0,0,0,64
+UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,UNLOAD_BAMBOO,17160,0,0,66,66,0,0,125,114,0,0,0
+UR41db08bd-dd7d-48c9-982b-540e9275ed99,swapnil,CROSS_CUTTING,550,10,100,0,0,0,0,0,0,1098,1022,0
