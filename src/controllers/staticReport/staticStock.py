@@ -27,6 +27,7 @@ class StockReport(Resource):
         )
     def convertToCsv(self,staticStockDict):
         result=[]
+        result.append(["Entity","Stock"])
         for entity in staticStockDict:
             result.append([entity,staticStockDict[entity]])
         my_df = pd.DataFrame(result)

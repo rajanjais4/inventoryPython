@@ -1,2 +1,7 @@
-bambooWt,150
-bambooUnits,100
+Entity,Stock
+quantity,66
+size,125
+splitWt,432
+bambooWt,248
+knotWt,430
+bambooUnits,191
