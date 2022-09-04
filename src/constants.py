@@ -47,6 +47,7 @@ userAccountingStaticCsvPath="./src/static/userAccounting.csv"
 
 ######################### Static Stock ##########################
 staticStockUrl='http://ec2-44-204-192-171.compute-1.amazonaws.com:8888/staticResource/getGlobalStocks'
+staticStockLabelUrl='http://ec2-44-204-192-171.compute-1.amazonaws.com:8888/staticResource/getProcessWiseEntries'
 warehouse="WAREHOUSE"
 data="data"
 stockStaticCsvPath="./src/static/stockReport.csv"

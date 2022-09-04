@@ -19,9 +19,10 @@ sys.path.insert(0, '../..')
 class UserAccounting(Resource):
 
     def _print(self,message):
-        print("---------- start ------------")
-        print(message)
-        print("---------- end ------------")
+        pass
+        # print("---------- start ------------")
+        # print(message)
+        # print("---------- end ------------")
 
     def handleException(self, error):
         print("============== ERROR handleException ===============")

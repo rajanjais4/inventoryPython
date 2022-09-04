@@ -1,7 +1,8 @@
+TimeStamp,2022-09-04 12:08:33.981456
 Entity,Stock
-quantity,66
-size,125
-splitWt,432
-bambooWt,248
-knotWt,430
-bambooUnits,191
+Quantity,66
+Size,125
+Split,432
+Bamboo Weight,248
+Knots,430
+Bamboo Units,191
