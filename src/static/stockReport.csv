@@ -1,8 +1,12 @@
-TimeStamp,2022-09-04 12:08:33.981456
-Entity,Stock
-Quantity,66
-Size,125
-Split,432
-Bamboo Weight,248
-Knots,430
-Bamboo Units,191
+TimeStamp,2022-09-18 18:35:26.321594,
+Process,Entity,Stock
+UNLOAD_BAMBOO,Process Stock,0
+WAREHOUSE,Filament Weight,10
+WAREHOUSE,Bamboo Weight,7220
+WAREHOUSE,Process Stock,7240
+WAREHOUSE,SawDust Weight,10
+CROSS_CUTTING,Process Stock,10
+SLIVER_MAKING,Process Stock,0
+POLISHING,Process Stock,0
+ROUND_STICK_MAKING,Process Stock,80
+SIZING,Process Stock,0

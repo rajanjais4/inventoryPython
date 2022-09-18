@@ -30,9 +30,10 @@ class StockReport(Resource):
         result=[]
         TimeStamp=datetime.datetime.now()
         result.append(["TimeStamp",TimeStamp])
-        result.append(["Entity","Stock"])
-        for entity in staticStockDict:
-            result.append([entity,staticStockDict[entity]])
+        result.append(["Process","Entity","Stock"])
+        for process in staticStockDict:
+            for entity in staticStockDict[process]:
+                result.append([process,entity,staticStockDict[process][entity]])
         my_df = pd.DataFrame(result)
         return my_df
     def saveCsvFile(self,csvResult,path):
@@ -46,14 +47,17 @@ class StockReport(Resource):
         for key,entityList in dataDict.items():
             for entity in entityList:
                 result[entity["value"]]=entity["label"]
-        print(result)
+        print("Mapping results - ",result)
         return result
     def updateLabel(self,staticStockDict,labelValueDict):
         result={}
-        for key,value in staticStockDict.items():
-            if key in labelValueDict:
-                key=labelValueDict[key]
-            result[key]=value
+        for process,entityDict in staticStockDict.items():
+            resultEntity={}
+            for key,value in entityDict.items():
+                if key in labelValueDict:
+                    key=labelValueDict[key]
+                resultEntity[key]=value
+            result[process]=resultEntity
         return result
 
     def get(self):
@@ -67,16 +71,16 @@ class StockReport(Resource):
                 staticStockLabelDict=staticStockLabelResponse.json()
                 labelValueDict=self.makeLabelValueDict(staticStockLabelDict)
             if staticStockResponse.ok:
-                staticStockDict=staticStockResponse.json()[constants.data][constants.warehouse]
+                staticStockDict=staticStockResponse.json()[constants.data]
                 staticStockDict=self.updateLabel(staticStockDict,labelValueDict)
                 csvResult=self.convertToCsv(staticStockDict)
-                # print(csvResult)
+                print(csvResult)
                 response_stream = BytesIO(csvResult.to_csv(index=False,header=False).encode())
                 self.saveCsvFile(csvResult,constants.stockStaticCsvPath)
                 return send_file(
                         response_stream,
                         mimetype="text/csv",
-                        attachment_filename="export.csv",
+                        attachment_filename="staticStock.csv",
                     )
             else:
                 pass
